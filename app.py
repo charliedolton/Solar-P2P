@@ -10,9 +10,54 @@ planet_ref = db.collection('Planets')
 
 app = Flask(__name__)
 
+
 @app.route("/")
 def hello_world():
     return "Hello World!"
+
+
+@app.route("/register", methods=["POST"])
+def register():
+    planet = request.form.get("name")
+
+
+@app.route("/sentiment", methods=["GET", "POST", "DELETE"])
+def sentiment():
+    # Poll and get (if available) a sentiment
+    # GET /sentiment
+    # planet: planet trying to receive a sentiment
+    if request.method == "GET":
+        planet = request.args.get("planet")
+
+        # check db if planet has any sentiments waiting
+        # return sentiment or ""
+        return ""
+
+    # Create (pseudo-send) a sentiment
+    # POST /sentiment
+    # planet: name of the sender planet
+    # to_planet: name of the planet to send the sentiment to
+    # sentiment: the sentiment to send
+    elif request.method == "Post":
+        planet, to_planet, sentiment_str = (
+            request.form.get("planet"),
+            request.form.get("to_planet"),
+            request.form.get("sentiment"),
+        )
+
+        # create a db entry from planet to to_planet with sentiment_str
+
+    # Delete a sentiment after the planet has receieved it
+    # DELETE /sentiment
+    # planet: the planet that received the sentiment
+    # sentiment: the sentiment that was received
+    else:
+        planet, sentiment_str = request.args.get("planet"), request.args.get(
+            "sentiment"
+        )
+
+        # delete the receieved sentiment from the database
+
 
 if __name__ == "__main__":
     app.run()
