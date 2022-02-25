@@ -415,4 +415,7 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+#Firebase credentials
+solar_key.json
+
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,linux,python,flask,jetbrains+all,visualstudiocode
