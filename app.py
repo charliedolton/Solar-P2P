@@ -124,11 +124,12 @@ def sentiment():
                     u'from': fromPlanet,
                     u'to': toPlanet,
                     u'message': sentiment,
-                    u'sentVal': sentVal,
-                    u'system': system,
+                    u'sentVal': int(sentVal),
+                    u'system': int(system),
                     u'date': datetime.datetime.now(tz=datetime.timezone.utc),
                 }
                 sentiment_ref.add(newSentiment)
+                return "Successfully sent sentiment", 200
 
             # create a db entry from planet to to_planet with sentiment_str
 
