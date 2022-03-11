@@ -144,7 +144,7 @@ def sentiment():
                 return "Please include sentiment ID parameter", 400
             else:
                 sentiment_ref.document(sentiment_id).delete()
-
+                return "Successfully deleted sentiment", 200
         else:
             return "Illegal request method", 405
 
