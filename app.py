@@ -93,7 +93,7 @@ def sentiment():
                 for sentiment_doc in sentiment_docs:
                     if str(sentiment_doc.to_dict()[u'system']) == system:
                         all_sentiments.append(dict(id = sentiment_doc.id, sentiment = sentiment_doc.to_dict()))
-                return jsonify(all_sentiments), 200
+                return jsonify(sorted(all_sentiments, key= lambda x:x["sentiment"]["date"])), 200
 
         # Create (pseudo-send) a sentiment
         # POST /sentiment
