@@ -41,6 +41,28 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 def hello_world():
     return "Hello World!"
 
+@app.route("/login", methods=["POST"])
+def login():
+    try:
+        # make sure required parameters are set and included
+        name = request.args.get("planetName")
+        if not name:
+            return "Please include planetName parameter", 400
+        pswrd = request.args.get("password")
+        if not pswrd:
+            return "Please include password parameter", 400
+        
+        planet_docs = planet_ref.stream()
+        for planet_doc in planet_docs:
+            print(planet_doc.to_dict()['planetName'])
+            if planet_doc.to_dict()['planetName'] == name:
+                if planet_doc.to_dict()['password'] == pswrd:
+                    return "Successfully logged in planet!", 200
+        
+        return "Invalid credentials", 200
+    except Exception as e:
+        return f"An Error Occured: {e}", 500
+
 
 @app.route("/register", methods=["POST"])
 def register():
@@ -73,6 +95,23 @@ def register():
         return f"An Error Occured: {e}", 500
 
 
+@app.route("/planetsInSystem", methods=["GET"])
+def planetsInSystem():
+    try:
+        system = request.args.get("systemNum")
+        if not system:
+            return "Please include systemNum parameter", 400
+        
+        planetsInSystem = []
+        
+        planet_docs = planet_ref.stream()
+        for planet_doc in planet_docs:
+            if int(system) in planet_doc.to_dict()['system']:
+                planetsInSystem.append(dict(id = planet_doc.id, planet = planet_doc.to_dict()))
+
+        return jsonify(planetsInSystem), 200
+    except Exception as e:
+        return f"An Error Occured: {e}", 500
 
 @app.route("/sentiment", methods=["GET", "POST", "DELETE"])
 def sentiment():
