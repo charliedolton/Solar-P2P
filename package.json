@@ -1,0 +1,23 @@
+{
+  "name": "user-setup",
+  "version": "1.0.0",
+  "description": "Express server to login or register user in the Solar System",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/charliedolton/Solar-P2P.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/charliedolton/Solar-P2P/issues"
+  },
+  "homepage": "https://github.com/charliedolton/Solar-P2P#readme",
+  "dependencies": {
+    "ejs": "^3.1.6",
+    "express": "^4.17.3"
+  }
+}

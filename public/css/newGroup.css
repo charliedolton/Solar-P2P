@@ -1,0 +1,8 @@
+.center {
+    text-align: center;
+}
+
+.row {
+    margin: auto;
+    width: fit-content;
+}

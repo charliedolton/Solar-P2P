@@ -1,0 +1,21 @@
+.center {
+    text-align: center;
+}
+
+.row {
+    margin: auto;
+    width: fit-content;
+    padding: 0.5rem;
+}
+
+.card {
+    padding: 0.5rem;
+    border-radius: 1rem;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    padding-top: 40px;
+}
