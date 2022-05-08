@@ -22,8 +22,13 @@
         </div>
         <div class="row">
             <div class="col-auto">
-                <input type="number" class='form-control' name='solarGroup' placeholder='Enter Solar System Group' required>
-                <!-- Make dropdown using API -->
+                <select name="id">
+                    <option>Select a Planet</option>
+                        <% for (i of planets) {%>
+                            <option value="<%= i.id %>"><%= i.planetInfo.planetName %></option>
+                        <% } %>
+        </select>
+    </form>
             </div>
         </div>
         <div class="row">
