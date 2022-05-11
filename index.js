@@ -1,5 +1,4 @@
 const express = require("express");
-const res = require("express/lib/response");
 const fetch = require("node-fetch");
 const app = express();
 const fs = require("fs");
@@ -9,68 +8,90 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 
-//routes
-var URL = "https://solar-cst499.herokuapp.com";
+
+var URL = "http://127.0.0.1:5000";
 var DIR = "../register";
 
+// var planets;
+// request(URL + "/planetsInSystem?systemNum=1", function (error, response, body) {
+//     if (!error && response.statusCode == 200) {
+//         planets = JSON.parse(body);
+//     }
+// });
 
-var planets;
-request(URL + "/planetsInSystem?systemNum=1", function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-        planets = JSON.parse(body);
-    }
-});
-// the movie list
-app.get('/', (req, res) => {
-    let login = req.query.login;
+const fetchUrl = async (url) => {
+    let response = await fetch(url);
+    let data = await response.json();
+    return data;
+}
 
-    console.log(planets);
-    res.render('login', { 'login': login, "planets" : planets });
-});
-
-const updateServer = async (url, data) => {
-    console.log(data);
-    var clientServerOptions = {
-        uri: URL + url,
-        body: data,
+const getOptions = (url, data) => {
+    let options = {
+        uri: url,
+        body: JSON.stringify(data),
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         }
     }
-    return request(clientServerOptions, (error, response) => {
-        console.log(error, response.body);
+    return options;
+};
+
+app.get('/', (req, res) => {
+    res.render('selectSystem');
+});
+
+app.post('/', (req, res) => {
+    let system = req.body.system;
+    console.log(system);
+    res.redirect(`/login?system=${system}`);
+});
+
+// the Login Page
+app.get('/login', async (req, res) => {
+    let status = req.query.status;
+    let system = req.query.system;
+    if(system == undefined) {
+        res.redirect('/');
         return;
-    });
-}
+    }
+    let url = URL + `/planetsInSystem?systemNum=${system}`;
+    let planets = await fetchUrl(url);
+
+    res.render('login', { 'status': status, "planets": planets, 'system': system });
+});
+
 
 app.post('/login', async (req, res) => {
-    let solarGroup = req.body.solarGroup;
     let planetName = req.body.username;
     let password = req.body.password;
+    let system = req.body.system;
 
-    let data = {"planetName": planetName,"password": password};
+    let data = { "planetName": planetName, "password": password};
+    let url = URL + "/login";
+    let options = getOptions(url, data);
 
 
-    let response = request.post(URL + "/login", params = data);
-    console.log(response)
-    // if (response.status != 200) {
-    //     res.redirect('/?login=failed');
-    // } else {
-    //     console.log(data);
-    //     if (!fs.existsSync(DIR)) {
-    //         fs.mkdirSync(DIR);
-    //     }
-    //     fs.writeFile(DIR + '/register.txt', data, (error) => {
-    //         if (error) {
-    //             throw error;
-    //         }
-    //     })
-    //     res.redirect('/');
-    // }
-    res.redirect('/');
-    // TODO: use Api to login && save solarGroup and username
-
+    request(options, (error, response) => {
+        if (error) {
+            console.error(error);
+        }
+        console.log(response.statusCode, response.body);
+        if (response.statusCode != 200) {
+            res.redirect(`/login?system=${system}&status=failed`);
+        } else {
+            console.log(data);
+            if (!fs.existsSync(DIR)) {
+                fs.mkdirSync(DIR);
+            }
+            fs.writeFile(DIR + '/register.txt', JSON.stringify(data), (error) => {
+                if (error) {
+                    throw error;
+                }
+            })
+            res.redirect(`/login?system=${system}&status=success`);
+        }
+    });
 });
 
 app.get('/register', (req, res) => {
@@ -78,32 +99,37 @@ app.get('/register', (req, res) => {
 });
 
 app.get('/new/user', (req, res) => {
-    res.render('newUser');
+    let status = req.query.status;
+
+    res.render('newUser', {'status': status});
 });
 
 app.post('/new/user', async (req, res) => {
-    let group = req.body.group;
-    let username = req.body.username;
+    let system = req.body.system;
+    let planetName = req.body.planet_name;
     let password = req.body.password;
 
-    request.post({ headers: {'content-type' : 'application/json'}
-               , url: URL, body: data }
-               , function(error, response, body){
-        console.log(body); 
-    }); 
-    console.log(response);
+    data = {
+        'planetName': planetName,
+        'system': system,
+        'password': password
+    };
 
-    res.redirect('/new/user');
-});
+    let url = URL + "/register";
 
-app.get('/new/group', (req, res) => {
-    res.render('newGroup');
-});
+    let options = getOptions(url, data);
 
-app.post('/new/group', (req, res) => {
-    let group = req.body.group;
-    console.log(group);
-    res.redirect('/new/group');
+    request(options, (error, response) => {
+        if (error) {
+            console.error(error);
+        }
+        console.log(response.body, response.statusCode);
+        if (response.statusCode == 200) {
+            res.redirect('/new/user?status=success');
+        } else {
+            res.redirect('/new/user?status=failed')
+        }
+    });
 });
 
 //start server

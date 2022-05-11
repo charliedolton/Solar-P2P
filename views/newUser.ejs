@@ -22,17 +22,16 @@
             <h4>Solar System:</h4>
         </div>
         <div class="row">
-            <select name="group" id="group" class="form-select">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-            </select>
+            <h4>Solar Group:</h4>
+        </div>
+        <div class="row">
+            <input type="number" class="form-control" placeholder="Enter Group" name="system" required>
         </div>
         <div class="row">
             <h4>Username</h4>
         </div>
         <div class="row">
-            <input type="text" class="form-control" placeholder="Enter Username" name="username" required>
+            <input type="text" class="form-control" placeholder="Enter Username" name="planet_name" required>
         </div>
         <div class="row">
             <h4>Password</h4>
@@ -40,6 +39,16 @@
         <div class="row">
             <input type="password" class="form-control" placeholder="Enter Password" name="password" required>
         </div>
+        <% if(typeof status != 'undefined') { %>
+            <div class="row">
+                <% if (status == "success") { %>
+                    <span class="text-success">Registeration Successful</span>
+                    <% } %>
+                    <% if (status == "failed") { %>
+                        <span class="text-danger">Registeration Failed</span>
+                <% } %>
+            </div>    
+        <% } %>
         <div class="row">
             <button class="btn btn-primary">Register User</button>
         </div>
