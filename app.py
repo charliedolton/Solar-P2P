@@ -32,7 +32,6 @@ firebase_admin.initialize_app(cred)
 db = firestore.client()
 planet_ref = db.collection('Planets')
 sentiment_ref = db.collection('Sentiments')
-
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
@@ -45,17 +44,17 @@ def hello_world():
 def login():
     try:
         # make sure required parameters are set and included
-        name = request.args.get("planetName")
+        name = request.json.get("planetName")
         if not name:
             return "Please include planetName parameter", 400
-        pswrd = request.args.get("password")
+        pswrd = request.json.get("password")
         if not pswrd:
             return "Please include password parameter", 400
         
         planet_docs = planet_ref.stream()
         for planet_doc in planet_docs:
-            print(planet_doc.to_dict()['planetName'])
-            if planet_doc.to_dict()['planetName'] == name:
+            print(planet_doc.id)
+            if planet_doc.id == name:
                 if planet_doc.to_dict()['password'] == pswrd:
                     return "Successfully logged in planet!", 200
         
@@ -68,14 +67,14 @@ def login():
 def register():
     try:
         # make sure required parameters are set and included
-        name = request.args.get("planetName")
+        name = request.json.get('planetName')
         if not name:
             return "Please include planetName parameter", 400
-        pswrd = request.args.get("password")
+        pswrd = request.json.get('password')
         if not pswrd:
             return "Please include password parameter", 400
         
-        system = request.args.get("system")
+        system = request.json.get('system')
         if not system:
             system = 1
         
@@ -86,7 +85,7 @@ def register():
         planet = {
             u'planetName' : str(name),
             u'password': str(pswrd),
-            u'system' : [system]
+            u'systemNum' : [system]
         }
         
         planet_ref.add(planet)
@@ -106,9 +105,11 @@ def planetsInSystem():
         
         planet_docs = planet_ref.stream()
         for planet_doc in planet_docs:
-            if int(system) in planet_doc.to_dict()['system']:
-                planetsInSystem.append(dict(id = planet_doc.id, planet = planet_doc.to_dict()))
-
+            if int(system) in planet_doc.to_dict()['systemNum']:
+                planetsInSystem.append(
+                    dict(id = planet_doc.id, 
+                    planetName = planet_doc.to_dict()['planetName'])
+                )
         return jsonify(planetsInSystem), 200
     except Exception as e:
         return f"An Error Occured: {e}", 500
@@ -194,7 +195,7 @@ def sentiment():
 def validatePlanetname(planetName):
     planet_docs = planet_ref.stream()
     for planet_doc in planet_docs:
-        print(planet_doc.to_dict()['planetName'])
+        # print(planet_doc.to_dict()['planetName'])
         if planet_doc.to_dict()['planetName'] == planetName:
             return False
     return True
