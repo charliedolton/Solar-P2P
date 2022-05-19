@@ -9,8 +9,8 @@ app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 
 
-var URL = "http://127.0.0.1:5000";
-var DIR = "../register";
+var URL = "https://solar-cst499.herokuapp.com/";
+var DIR = "/var/register";
 
 // var planets;
 // request(URL + "/planetsInSystem?systemNum=1", function (error, response, body) {
