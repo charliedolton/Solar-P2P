@@ -8,16 +8,9 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 
-
 var URL = "https://solar-cst499.herokuapp.com/";
 var DIR = "/var/register";
 
-// var planets;
-// request(URL + "/planetsInSystem?systemNum=1", function (error, response, body) {
-//     if (!error && response.statusCode == 200) {
-//         planets = JSON.parse(body);
-//     }
-// });
 
 const fetchUrl = async (url) => {
     let response = await fetch(url);
@@ -43,7 +36,6 @@ app.get('/', (req, res) => {
 
 app.post('/', (req, res) => {
     let system = req.body.system;
-    console.log(system);
     res.redirect(`/login?system=${system}`);
 });
 
@@ -62,7 +54,6 @@ app.get('/login', async (req, res) => {
     } catch (err) {
         console.log(err);
     }
-
     res.render('login', { 'status': status, "planets": planets, 'system': system });
 });
 
@@ -73,7 +64,7 @@ app.post('/login', async (req, res) => {
     let system = req.body.system;
 
     let data = { "planetName": planetName, "password": password };
-    let url = URL + "/login";
+    let url = URL + `/login?planetName=${planetName}&password=${password}`;
     let options = getOptions(url, data);
 
     if (planetName == "None") {
@@ -124,7 +115,7 @@ app.post('/new/user', async (req, res) => {
         'password': password
     };
 
-    let url = URL + "/register";
+    let url = URL + `/register?planetName=${planetName}&password=${password}&systemNum=${system}`;
 
     let options = getOptions(url, data);
 
