@@ -27,14 +27,17 @@
         <div class="row">
             <div class="col-auto">
                 <select class="form-select" name="username">
-                    <option>Select a Planet</option>
-                    <% for (planet of planets) {%>
-                        <option value="<%= planet.id %>">
-                            <%= planet.planetName %>
-                        </option>
+                    <% if ( planets != undefined) { %>
+                        <option>Select a Planet</option>
+                        <% for (planet of planets) {%>
+                            <option value="<%= planet.id %>">
+                                <%= planet.planetName %>
+                            </option>
                         <% } %>
+                    <% } else { %>
+                        <option value="None">No Planet In System</option>
+                    <% } %>
                 </select>
-
             </div>
         </div>
         <div class="row">

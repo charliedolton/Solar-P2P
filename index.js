@@ -51,12 +51,17 @@ app.post('/', (req, res) => {
 app.get('/login', async (req, res) => {
     let status = req.query.status;
     let system = req.query.system;
-    if(system == undefined) {
+    if (system == undefined) {
         res.redirect('/');
         return;
     }
     let url = URL + `/planetsInSystem?systemNum=${system}`;
-    let planets = await fetchUrl(url);
+    let planets;
+    try {
+        planets = await fetchUrl(url);
+    } catch (err) {
+        console.log(err);
+    }
 
     res.render('login', { 'status': status, "planets": planets, 'system': system });
 });
@@ -67,10 +72,14 @@ app.post('/login', async (req, res) => {
     let password = req.body.password;
     let system = req.body.system;
 
-    let data = { "planetName": planetName, "password": password};
+    let data = { "planetName": planetName, "password": password };
     let url = URL + "/login";
     let options = getOptions(url, data);
 
+    if (planetName == "None") {
+        res.redirect(`/login?system=${system}&status=failed`);
+        return;
+    }
 
     request(options, (error, response) => {
         if (error) {
@@ -101,7 +110,7 @@ app.get('/register', (req, res) => {
 app.get('/new/user', (req, res) => {
     let status = req.query.status;
 
-    res.render('newUser', {'status': status});
+    res.render('newUser', { 'status': status });
 });
 
 app.post('/new/user', async (req, res) => {
