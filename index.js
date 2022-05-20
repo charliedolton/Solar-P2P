@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 var URL = "https://solar-cst499.herokuapp.com";
 
 // DIR where the server stores planet ID
-var DIR = "/home/pi/register";
+var DIR = "/home/pi/Solar";
 
 // Method to pull data using GET request
 const fetchUrl = async (url) => {
