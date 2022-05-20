@@ -2,7 +2,8 @@ const express = require("express");
 const fetch = require("node-fetch");
 const app = express();
 const fs = require("fs");
-const request = require('request');
+const request = require("request");
+const bcrypt = require("bcryptjs");
 
 app.set("view engine", "ejs");
 app.use(express.static("public"));
@@ -12,7 +13,11 @@ app.use(express.urlencoded({ extended: true }));
 var URL = "https://solar-cst499.herokuapp.com";
 
 // DIR where the server stores planet ID
+<<<<<<< Updated upstream
 var DIR = "/home/pi/Solar";
+=======
+var DIR = "../register";
+>>>>>>> Stashed changes
 
 // Method to pull data using GET request
 const fetchUrl = async (url) => {
@@ -72,17 +77,27 @@ app.get('/login', async (req, res) => {
 // Login page's post implementation to try and login
 app.post('/login', async (req, res) => {
     // Accessing information from request body
-    let planetName = req.body.username;
+    let planet = req.body.planet;
     let password = req.body.password;
     let system = req.body.system;
 
+    planet = JSON.stringify(planet);
+    planet = JSON.parse(planet);
+    let planetName = planet.id;
+    let name = planet.name;
+    console.log(planet, planetName, name);
     // Setting up parameters for post request
-    let data = { "planetName": planetName, "password": password };
+    let data = {
+        "planetName": planetName,
+        "password": password,
+        "system": system
+    };
+    console.log(data);
     let url = URL + `/login?planetName=${planetName}&password=${password}`;
     let options = getOptions(url, data);
 
     // If no planet name found redirect to login page with failed status
-    if (planetName == "None") {
+    if (planetName == "None" || planetName == undefined) {
         res.redirect(`/login?system=${system}&status=failed`);
         return;
     }

@@ -1,6 +1,6 @@
 .card {
-    margin: auto;
-    width: fit-content;
+    margin: 2rem;
+    width: 80vw;
     padding: 1rem;
     border-radius: 1rem;
 }
@@ -22,4 +22,11 @@ body {
 
 .center {
     text-align: center;
+}
+
+.topleft {
+    width: 100vw;
+    position: absolute;
+    top: 8px;
+    padding: 1rem;
 }

@@ -14,6 +14,9 @@
 </head>
 
 <body>
+    <a class="topleft" href="/">
+        <img src="images/back.png" width="24">
+    </a>
     <form method="post" action="/login" class="card p10">
         <input type="hidden" name="system" value="<%= system %>">
         <div class="row">
@@ -26,17 +29,22 @@
         </div>
         <div class="row">
             <div class="col-auto">
-                <select class="form-select" name="username">
-                    <% if ( planets != undefined) { %>
+                <select class="form-select" name="planet">
+                    <% if ( planets !=undefined) { %>
                         <option value="None">Select a Planet</option>
                         <% for (planet of planets) {%>
-                            <option value="<%= planet.id %>">
+                            <option 
+                                value = '{ 
+                                "id":<%= planet.id %>, 
+                                "name":<%= planet.planetInfo.planetName %>
+                                }'
+                            >
                                 <%= planet.planetInfo.planetName %>
                             </option>
-                        <% } %>
-                    <% } else { %>
-                        <option value="None">No Planet In System</option>
-                    <% } %>
+                            <% } %>
+                                <% } else { %>
+                                    <option value="None">No Planet In System</option>
+                                    <% } %>
                 </select>
             </div>
         </div>
@@ -50,19 +58,19 @@
                 <input type="password" class='form-control' name='password' placeholder="Enter Password" required>
             </div>
         </div>
-        <% if (typeof status != undefined) { %>
+        <% if (typeof status !=undefined) { %>
             <div class="row">
-                <% if(status == "failed")  { %>
+                <% if(status=="failed" ) { %>
                     <span class="text-danger">Login Failed</span>
-                <% } %> 
-                <% if(status == "success") { %>
-                    <span class="text-success">Login Successful</span>
-                <% } %>     
+                    <% } %>
+                        <% if(status=="success" ) { %>
+                            <span class="text-success">Login Successful</span>
+                            <% } %>
             </div>
-        <% } %>
-        <div class="row">
-            <button class="btn btn-primary">Login</button>
-        </div>
+            <% } %>
+                <div class="row">
+                    <button class="btn btn-primary">Login</button>
+                </div>
     </form>
     <br>
     <div class="row">
