@@ -33,12 +33,7 @@
                     <% if ( planets !=undefined) { %>
                         <option value="None">Select a Planet</option>
                         <% for (planet of planets) {%>
-                            <option 
-                                value = '{ 
-                                "id":<%= planet.id %>, 
-                                "name":<%= planet.planetInfo.planetName %>
-                                }'
-                            >
+                            <option value="<%= planet.planetInfo.planetName %>">
                                 <%= planet.planetInfo.planetName %>
                             </option>
                             <% } %>

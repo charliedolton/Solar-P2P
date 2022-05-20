@@ -13,11 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 var URL = "https://solar-cst499.herokuapp.com";
 
 // DIR where the server stores planet ID
-<<<<<<< Updated upstream
-var DIR = "/home/pi/Solar";
-=======
 var DIR = "../register";
->>>>>>> Stashed changes
 
 // Method to pull data using GET request
 const fetchUrl = async (url) => {
@@ -77,39 +73,35 @@ app.get('/login', async (req, res) => {
 // Login page's post implementation to try and login
 app.post('/login', async (req, res) => {
     // Accessing information from request body
-    let planet = req.body.planet;
+    let name = req.body.planet;
     let password = req.body.password;
     let system = req.body.system;
 
-    planet = JSON.stringify(planet);
-    planet = JSON.parse(planet);
-    let planetName = planet.id;
-    let name = planet.name;
-    console.log(planet, planetName, name);
-    // Setting up parameters for post request
-    let data = {
-        "planetName": planetName,
-        "password": password,
-        "system": system
-    };
-    console.log(data);
-    let url = URL + `/login?planetName=${planetName}&password=${password}`;
-    let options = getOptions(url, data);
-
     // If no planet name found redirect to login page with failed status
-    if (planetName == "None" || planetName == undefined) {
+    if (name == "None" || name == undefined) {
         res.redirect(`/login?system=${system}&status=failed`);
         return;
     }
 
+    let data = {
+        "planetName": name,
+        "password": password,
+        "system": system
+    };
+
+    // Setting up parameters for post request
+    let url = URL + `/login?planetName=${name}&password=${password}`;
+    let options = getOptions(url, data);
+
+    console.log(url);
     // Making the post request to the API
     request(options, (error, response) => {
         if (error) {
             console.error(error);
         }
-
+        console.log(response.body, data);
         // If Login is not successful redirect to login page with failed status
-        if (response.statusCode != 200) {
+        if (response.body != "Successfully logged in planet!") {
             res.redirect(`/login?system=${system}&status=failed`);
         } else {
             // If DIR doesn't exist on the sytem create the DIR
@@ -132,7 +124,6 @@ app.post('/login', async (req, res) => {
 // New User registration page
 app.get('/new/user', (req, res) => {
     let status = req.query.status;
-
     res.render('newUser', { 'status': status });
 });
 
